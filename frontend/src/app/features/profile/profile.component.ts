@@ -4,7 +4,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ComplaintService } from '../../core/services/complaint.service';
 import { Complaint } from '../../shared/models/complaint.model';
 import { User } from '../../shared/models/user.model';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -19,6 +19,13 @@ import { Observable } from 'rxjs';
         <p><strong>Name:</strong> {{ user.name }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Role:</strong> {{ user.role }}</p>
+
+        <h2>Your Complaints</h2>
+        <ul>
+          <li *ngFor="let complaint of complaints">
+            <strong>{{ complaint.title }}</strong> - {{ complaint.status }}
+          </li>
+        </ul>
       </div>
     </div>
   `,
@@ -37,14 +44,28 @@ import { Observable } from 'rxjs';
 })
 export class ProfileComponent implements OnInit {
   user$: Observable<User | null>;
+  complaints: Complaint[] = [];
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private complaintService: ComplaintService
   ) {
     this.user$ = this.authService.currentUser$;
   }
 
   ngOnInit(): void {
+    this.loadComplaints();
+  }
+
+  loadComplaints(): void {
+    this.complaintService.getComplaints().subscribe({
+      next: (data) => {
+        this.complaints = data;
+      },
+      error: (err) => {
+        console.error('Error loading complaints:', err);
+      }
+    });
   }
 
   getInitials(name: string): string {

@@ -35,7 +35,7 @@ import { User } from '../../models/user.model';
               >
                 Admin
               </a>
-            </ng-container>
+            <!-- Removed erroneous closing ng-container tag -->
             <div class="navbar-item dropdown" [class.is-active]="dropdownOpen">
               <button class="profile-button" aria-haspopup="true" aria-controls="dropdown-menu" [attr.aria-expanded]="dropdownOpen" (click)="toggleDropdown($event)">
                 <ng-container *ngIf="(currentUser$ | async) as user; else defaultIcon">
