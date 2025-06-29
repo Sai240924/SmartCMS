@@ -70,16 +70,6 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
       </div>
     </section>
-
-    <section class="cta">
-      <div class="container">
-        <div class="cta-content">
-          <h2 class="cta-title">Ready to streamline your complaint management?</h2>
-          <p class="cta-description">Join thousands of satisfied customers who have improved their customer service experience.</p>
-          <a routerLink="/register" class="btn btn-primary cta-button">Get Started Today</a>
-        </div>
-      </div>
-    </section>
   `,
   styles: [`
     .hero {
@@ -263,38 +253,6 @@ import { AuthService } from '../../core/services/auth.service';
       line-height: 1.6;
     }
     
-    .cta {
-      padding: 80px 0;
-      background: linear-gradient(135deg, #3F51B5 0%, #303F9F 100%);
-      color: white;
-      text-align: center;
-    }
-    
-    .cta-content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-    
-    .cta-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-    
-    .cta-description {
-      font-size: 1.25rem;
-      margin-bottom: 32px;
-      opacity: 0.9;
-    }
-    
-    .cta-button {
-      padding: 12px 32px;
-      font-size: 1.1rem;
-      font-weight: 500;
-      border-radius: 4px;
-    }
-    
     @media (max-width: 768px) {
       .hero-title {
         font-size: 2rem;
@@ -316,14 +274,6 @@ import { AuthService } from '../../core/services/auth.service';
       
       .step {
         width: 100%;
-      }
-      
-      .cta-title {
-        font-size: 1.75rem;
-      }
-      
-      .cta-description {
-        font-size: 1.1rem;
       }
     }
   `]

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -21,6 +21,7 @@ import { User } from '../../models/user.model';
         <div class="navbar-menu">
           <div class="navbar-end">
               <a 
+                *ngIf="isLoggedIn$ | async"
                 routerLink="/complaints" 
                 routerLinkActive="active" 
                 class="navbar-item"
@@ -35,31 +36,31 @@ import { User } from '../../models/user.model';
               >
                 Admin
               </a>
-            <!-- Removed erroneous closing ng-container tag -->
-            <div class="navbar-item dropdown" [class.is-active]="dropdownOpen">
-              <button class="profile-button" aria-haspopup="true" aria-controls="dropdown-menu" [attr.aria-expanded]="dropdownOpen" (click)="toggleDropdown($event)">
+            <div class="navbar-item dropdown">
+              <button class="profile-button" aria-haspopup="true" aria-controls="dropdown-menu" aria-expanded="false">
                 <ng-container *ngIf="(currentUser$ | async) as user; else defaultIcon">
                   <div class="profile-icon-circle" *ngIf="user && user.name; else defaultIcon">
                     {{ getInitials(user.name) }}
                   </div>
                 </ng-container>
-                <ng-template #defaultIcon>
-                  <span class="profile-icon" aria-label="default profile icon" role="img">User</span>
-                </ng-template>
+<ng-template #defaultIcon>
+  <svg class="profile-icon" aria-label="default profile icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="32" height="32">
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+  </svg>
+</ng-template>
               </button>
-              <div id="dropdown-menu" class="dropdown-menu" *ngIf="dropdownOpen">
+              <div id="dropdown-menu" class="dropdown-menu">
                 <ng-container *ngIf="(isLoggedIn$ | async); else loggedOutMenu">
-                  <a routerLink="/profile" routerLinkActive="active" class="dropdown-item" (click)="closeDropdown()">
+                  <a routerLink="/profile" routerLinkActive="active" class="dropdown-item">
                     Profile
                   </a>
-                  <a (click)="logout(); closeDropdown()" class="dropdown-item logout">
+                  <a (click)="logout()" class="dropdown-item logout">
                     Logout
                   </a>
                 </ng-container>
                 <ng-template #loggedOutMenu>
-                  <span class="profile-icon" style="color: red; font-weight: bold;">Profile Button Visible</span>
-                  <a routerLink="/login" routerLinkActive="active" class="dropdown-item" (click)="closeDropdown()">Login</a>
-                  <a routerLink="/register" routerLinkActive="active" class="dropdown-item" (click)="closeDropdown()">Register</a>
+                  <a routerLink="/login" routerLinkActive="active" class="dropdown-item">Login</a>
+                  <a routerLink="/register" routerLinkActive="active" class="dropdown-item">Register</a>
                 </ng-template>
               </div>
             </div>
@@ -182,6 +183,7 @@ import { User } from '../../models/user.model';
       line-height: 32px;
       text-align: center;
       vertical-align: middle;
+      border-radius: 50%;
     }
     .profile-icon-circle {
       width: 32px;
@@ -206,8 +208,12 @@ import { User } from '../../models/user.model';
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       min-width: 120px;
       z-index: 10;
-      display: flex;
+      display: none;
       flex-direction: column;
+    }
+    
+    .dropdown:hover .dropdown-menu {
+      display: flex;
     }
     
     .dropdown-item {
@@ -297,9 +303,8 @@ export class NavbarComponent implements OnInit {
   isLoggedIn$!: Observable<boolean>;
   isAdmin$!: Observable<boolean>;
   currentUser$!: Observable<User | null>;
-  dropdownOpen = false;
   
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private cdr: ChangeDetectorRef) { }
   
   ngOnInit(): void {
     this.isLoggedIn$ = this.authService.isLoggedIn();
@@ -309,15 +314,7 @@ export class NavbarComponent implements OnInit {
   
   logout(): void {
     this.authService.logout();
-  }
-
-  toggleDropdown(event: Event): void {
-    event.stopPropagation();
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  closeDropdown(): void {
-    this.dropdownOpen = false;
+    this.cdr.detectChanges();
   }
 
   getInitials(name: string): string {

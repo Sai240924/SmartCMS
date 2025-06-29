@@ -22,6 +22,7 @@ export class ComplaintService {
       if (filters.category) params.append('category', filters.category);
       if (filters.priority) params.append('priority', filters.priority);
       if (filters.search) params.append('search', filters.search);
+      if (filters.userId) params.append('userId', filters.userId);
       
       queryParams = `?${params.toString()}`;
     }

@@ -14,6 +14,7 @@ exports.register = async (req, res) => {
     await user.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -29,8 +30,18 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || 'default_secret_key_for_dev',
+      { expiresIn: '1h' }
+    );
+    const userData = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+    res.json({ token, user: userData });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

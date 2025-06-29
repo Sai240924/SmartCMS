@@ -1,18 +1,35 @@
 const Complaint = require('../models/complaint.model');
 
+const mongoose = require('mongoose');
+
 exports.createComplaint = async (req, res) => {
   try {
+    console.log('Received complaint data:', req.body);
+
+    if (!mongoose.Types.ObjectId.isValid(req.body.userId)) {
+      return res.status(400).json({ message: 'Invalid userId' });
+    }
+
     const complaint = new Complaint(req.body);
     await complaint.save();
     res.status(201).json(complaint);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error creating complaint:', error);
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({ message: messages.join(', ') });
+    }
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 };
 
 exports.getComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find();
+    const filter = {};
+    if (req.query.userId) {
+      filter.userId = req.query.userId;
+    }
+    const complaints = await Complaint.find(filter);
     res.json(complaints);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

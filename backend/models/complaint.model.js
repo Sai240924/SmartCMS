@@ -10,12 +10,20 @@ const complaintSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  category: {
+    type: String,
+    required: false
+  },
+  priority: {
+    type: String,
+    required: false
+  },
   status: {
     type: String,
-    enum: ['open', 'in_progress', 'closed'],
-    default: 'open'
+    enum: ['New', 'open', 'in_progress', 'closed'],
+    default: 'New'
   },
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true

@@ -58,12 +58,16 @@ export class ProfileComponent implements OnInit {
   }
 
   loadComplaints(): void {
-    this.complaintService.getComplaints().subscribe({
-      next: (data) => {
-        this.complaints = data;
-      },
-      error: (err) => {
-        console.error('Error loading complaints:', err);
+    this.user$.subscribe(user => {
+      if (user && user.id) {
+        this.complaintService.getComplaints({ userId: user.id }).subscribe({
+          next: (data) => {
+            this.complaints = data;
+          },
+          error: (err) => {
+            console.error('Error loading complaints:', err);
+          }
+        });
       }
     });
   }

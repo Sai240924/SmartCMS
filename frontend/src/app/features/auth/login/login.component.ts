@@ -224,17 +224,21 @@ export class LoginComponent {
     }
     
     this.loading = true;
-    this.authService.login(
-      this.f['email'].value,
-      this.f['password'].value
-    ).subscribe({
-      next: () => {
-        this.router.navigate([this.returnUrl]);
-      },
-      error: error => {
-        this.errorMessage = error.error?.message || 'Login failed. Please check your credentials.';
-        this.loading = false;
-      }
-    });
+      this.authService.login(
+        this.f['email'].value,
+        this.f['password'].value
+      ).subscribe({
+        next: (response) => {
+          console.log('Login successful, response:', response);
+          this.router.navigate([this.returnUrl]).then(() => {
+            window.location.reload();
+          });
+        },
+        error: error => {
+          this.errorMessage = error.error?.message || 'Login failed. Please check your credentials.';
+          this.loading = false;
+          console.error('Login error:', error);
+        }
+      });
   }
 }

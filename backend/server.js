@@ -35,7 +35,18 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/complaint
     console.error('MongoDB connection error:', error);
   });
 
+const morgan = require('morgan');
+
 // Basic route
 app.get('/', (req, res) => {
   res.send('Smart Complaint Management System API');
+});
+
+// Logging middleware
+app.use(morgan('dev'));
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({ message: 'Internal Server Error' });
 });

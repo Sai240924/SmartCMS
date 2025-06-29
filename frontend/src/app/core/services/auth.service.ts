@@ -53,8 +53,9 @@ export class AuthService {
   }
   
   isLoggedIn(): Observable<boolean> {
-    const token = this.getToken();
-    return of(!!token);
+    return this.currentUser$.pipe(
+      map(user => !!user)
+    );
   }
   
   isAdmin(): Observable<boolean> {
@@ -65,9 +66,17 @@ export class AuthService {
   
   private setUserData(response: any): void {
     if (response && response.token && response.user) {
+      // Map _id to id for frontend user model compatibility
+      const user = {
+        id: response.user._id,
+        name: response.user.name,
+        email: response.user.email,
+        role: response.user.role,
+        createdAt: response.user.createdAt
+      };
       localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-      this.currentUserSubject.next(response.user);
+      localStorage.setItem('user', JSON.stringify(user));
+      this.currentUserSubject.next(user);
     }
   }
 }
