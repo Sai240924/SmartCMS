@@ -43,9 +43,7 @@ This platform allows users to register, log in, submit complaints with detailed 
 
 ## Preview
 
-
-https://github.com/user-attachments/assets/dc4cd939-e482-4e9c-91f5-efa2185e26fd
-
+https://github.com/user-attachments/assets/df1e7e6c-0a28-4544-98b7-eadb1245315e
 
 
 ### Environment Variables
