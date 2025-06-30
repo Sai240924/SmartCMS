@@ -19,9 +19,8 @@ import { CommonModule } from '@angular/common';
             <h3 class="footer-title">Quick Links</h3>
             <ul class="footer-links">
               <li><a href="/">Home</a></li>
-              <li><a href="/dashboard">Dashboard</a></li>
+              <li><a href="/profile">Profile</a></li>
               <li><a href="/complaints">Complaints</a></li>
-              <li><a href="/login">Login</a></li>
             </ul>
           </div>
           <div class="footer-section">
